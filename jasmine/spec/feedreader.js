@@ -63,16 +63,18 @@ $(function() {
          * 测试应该包含两个 expectation ： 党点击图标的时候菜单是否显示，
          * 再次点击的时候是否隐藏。
          */
-        beforeEach(function(done) {
-            menuIcon.on('click', function() {
-                console.log(1);
-                done();
-            });
-        });
-        it('check menu click', function(done) {
-            console.log(2);
+        // beforeEach(function(done) {
+        //     menuIcon.on('click', function() {
+        //         console.log(1);
+        //         done();
+        //     });
+        // });
+        it('check menu click', function() {
+            $('.icon-list').click();
             expect(document.body.className).not.toBe('menu-hidden');
-            done();
+            $('.icon-list').click();
+            expect(document.body.className).toBe('menu-hidden');
+            // done();
         });
     });
 
@@ -86,19 +88,25 @@ $(function() {
          * 和异步的 done() 函数。
          */
         it('watch loadFeed', function() {
-
+            expect(document.getElementsByClassName('feed').length).not.toBe(0);
         });
-        /* TODO: 写一个叫做 "New Feed Selection" 的测试用例 */
-        it('New Feed Selection', function() {
-
-        });
+    });
+    /* TODO: 写一个叫做 "New Feed Selection" 的测试用例 */
+    describe('New Feed Selection', function() {
         /* TODO:
          * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
          * 记住，loadFeed() 函数是异步的。
          */
-        it('check loadFeed', function() {
-
-
+        let html;
+        beforeEach(function(done) {
+            done();
+        });
+        it('check loadFeed', function(done) {
+            expect($('.feed').html).not.toBe(html);
+            done();
         });
     });
+
+
+
 }());
