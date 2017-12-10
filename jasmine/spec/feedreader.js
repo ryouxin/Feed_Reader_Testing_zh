@@ -25,11 +25,10 @@ $(function() {
          */
         // describe('Check Feeds', function() {
         it('url are null', function() {
-            // console.log(allFeeds);
             for (let i of allFeeds) {
-                // console.log((i.name.length));
-                expect(i.url).not.toBe(null);
-                expect(i.url.length).not.toBe(0);
+                _check(i.url, i.url.length);
+                var regularExpressionUrl = /^((ht|f)tps?):\/\/([\w\-]+(\.[\w\-]+)*\/)*[\w\-]+(\.[\w\-]+)*\/?(\?([\w\-\.,@?^=%&:\/~\+#]*)+)?/; // 检查 URL 格式是否正确的正规表达式
+                expect(i.url).toMatch(regularExpressionUrl); // 检查格式
             }
         });
         // });
@@ -38,14 +37,15 @@ $(function() {
          * 编写一个测试遍历 allFeeds 对象里面的所有的源来保证有名字字段而且不是空的。
          */
         it('name are null', function() {
-            // console.log(allFeeds);
             for (let i of allFeeds) {
-                // console.log((i.name.length));
-                expect(i.name).not.toBe(null);
-                expect(i.name.length).not.toBe(0);
-
+                _check(i.name, i.name.length);
             }
         });
+
+        function _check(i, n) {
+            expect(i).not.toBe(null);
+            expect(n).not.toBe(0);
+        }
     });
     /* TODO: 写一个叫做 "The menu" 的测试用例 */
     describe('The menu', function() {
@@ -56,7 +56,7 @@ $(function() {
          */
         ;
         it('check menu hidden', function() {
-            expect(document.body.className).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
         /* TODO:
          * 写一个测试用例保证当菜单图标被点击的时候菜单会切换可见状态。这个
@@ -71,9 +71,9 @@ $(function() {
         // });
         it('check menu click', function() {
             $('.icon-list').click();
-            expect(document.body.className).not.toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).not.toBe(true);
             $('.icon-list').click();
-            expect(document.body.className).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBe(true);
             // done();
         });
     });
@@ -87,8 +87,15 @@ $(function() {
          * 记住 loadFeed() 函数是异步的所以这个而是应该使用 Jasmine 的 beforeEach
          * 和异步的 done() 函数。
          */
-        it('watch loadFeed', function() {
-            expect(document.getElementsByClassName('feed').length).not.toBe(0);
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                done();
+            });
+        });
+        it('watch loadFeed', function(done) {
+            console.log(document.getElementsByClassName('entry').length);
+            expect(document.getElementsByClassName('entry').length).not.toBe(0);
+            done();
         });
     });
     /* TODO: 写一个叫做 "New Feed Selection" 的测试用例 */
@@ -97,12 +104,20 @@ $(function() {
          * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
          * 记住，loadFeed() 函数是异步的。
          */
-        let html;
+        var beforeHtml,
+            afterHtml;
         beforeEach(function(done) {
-            done();
+            loadFeed(1, function() {
+                beforeHtml = $('.feed');
+                loadFeed(0, function() {
+                    afterHtml = $('.feed');
+                });
+                // (beforeHtml == afterHtml) ? console.log(beforeHtml): console.log(1);;
+                done();
+            });
         });
         it('check loadFeed', function(done) {
-            expect($('.feed').html).not.toBe(html);
+            expect(beforeHtml).not.toBe(afterHtml);
             done();
         });
     });
