@@ -89,13 +89,13 @@ $(function() {
          */
         beforeEach(function(done) {
             loadFeed(0, function() {
+                console.log('done');
                 done();
             });
         });
-        it('watch loadFeed', function(done) {
+        it('watch loadFeed', function() {
             console.log(document.getElementsByClassName('entry').length);
             expect(document.getElementsByClassName('entry').length).not.toBe(0);
-            done();
         });
     });
     /* TODO: 写一个叫做 "New Feed Selection" 的测试用例 */
@@ -107,19 +107,41 @@ $(function() {
         var beforeHtml,
             afterHtml;
         beforeEach(function(done) {
-            loadFeed(1, function() {
+            loadFeed(0, function() {
                 beforeHtml = $('.feed');
-                loadFeed(0, function() {
+                console.log('f');
+                loadFeed(2, function() {
                     afterHtml = $('.feed');
+                    console.log('s');
+                    console.log('done');
+                    done();
                 });
-                // (beforeHtml == afterHtml) ? console.log(beforeHtml): console.log(1);;
-                done();
             });
         });
-        it('check loadFeed', function(done) {
+        it('check loadFeed', function() {
+            console.log('check');
             expect(beforeHtml).not.toBe(afterHtml);
-            done();
         });
+        // beforeEach(function(done) {
+        //     loadFeed(1, function() {
+        //         beforeHtml = $('.feed');
+        //         console.log('first html');
+        //         loadFeed(0, function() {
+        //             afterHtml = $('.feed');
+        //             console.log('second html');
+        //             console.log('done');
+        //             // (beforeHtml == afterHtml) ? console.log(beforeHtml): console.log(1);
+        //             done();
+        //         });
+        //     });
+        // });
+        // it('check loadFeed', function() {
+        //     console.log('check html');
+        //     expect(beforeHtml).not.toBe(afterHtml);
+        //     console.log('check done');
+        //     // (beforeHtml == afterHtml) ? console.log(beforeHtml): console.log(1);
+        //     // done();
+        // });
     });
 
 
